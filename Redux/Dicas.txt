@@ -1,0 +1,17 @@
+Parei no video 51
+
+Instalação Redux
+yarn add redux react-redux
+yarn add prop-types
+
+Instalação Reactotron
+yarn add reactotron-react-js reactotron-redux reactotron-redux-saga
+
+Api 
+yarn add redux-saga axios
+
+
+Descrição do funcionamento: Ao adicionar repositorio favorito no index Main, é conectado ao redux,
+no index Store é iniciando o redux Saga.
+É passado a action REQUEST que realiza a chamada na api assincrona utilizando o yield, os dados trazidos
+são direcionados a action SUCCESS, por sua vez passa os dados para o state inicial conforme configurado no reducer.
