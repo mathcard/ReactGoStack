@@ -1,0 +1,7 @@
+Criação: yarn create react-app spotify
+
+npm install eslint - D
+npx eslint --init
+
+Estilos: yarn add styled-components
+Slider: yarn add rc-slider
