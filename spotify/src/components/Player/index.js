@@ -1,5 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Slider from "rc-slider";
+import Sound from 'react-sound';
+import PropTypes from 'prop-types';
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as PlayerActions } from '../../store/ducks/player';
+
 import { Container, Current, Volume, Progress, Controls, Time, ProgressSlider } from './styles';
 import VolumeIcon from '../../assets/images/volume.svg';
 import ShuffleIcon from '../../assets/images/shuffle.svg';
@@ -9,62 +16,121 @@ import PauseIcon from '../../assets/images/pause.svg';
 import ForwardIcon from '../../assets/images/forward.svg';
 import RepeatIcon from '../../assets/images/repeat.svg';
 
-const Player = () => (
+const Player = ({ 
+  player, play, pause, next, prev, playing, position, duration
+ }) => (
   <Container>
-    <Current>
-      <img src="https://memorialraulseixas457382085.files.wordpress.com/2018/06/salt.jpg?w=616" alt="Sociedade Alternativa"/>
+    {!!player.currentSong && (
+      <Sound 
+        url={player.currentSong.file} 
+        playStatus={player.status} 
+        onFinishedPlaying={next}
+        onPlaying={playing}
+      />
+    )}
 
-      <div>
-        <span>Sociedade Alternativa</span>
-        <small> Raul Seixas</small>
-      </div>
+    <Current>
+      {!!player.currentSong && (
+        <Fragment>
+          <img
+            src={player.currentSong.thumbnail}
+            alt={player.currentSong.title}
+          />
+
+          <div>
+            <span>{player.currentSong.title}</span>
+            <small>{player.currentSong.author}</small>
+          </div>
+        </Fragment>
+      )}
     </Current>
-    
+
     <Progress>
       <Controls>
         <button>
           <img src={ShuffleIcon} alt="Shuffle" />
         </button>
-        <button>
+        <button onClick={prev}>
           <img src={BackwardIcon} alt="BackwardIcon" />
         </button>
-        <button>
-          <img src={PlayIcon} alt="Play" />
-        </button>
-        <button>
-          <img src={PauseIcon} alt="Pause" />
-        </button>
-        <button>
+        {!!player.currentSong && player.status === Sound.status.PLAYING ? (
+          <button onClick={pause}>
+            <img src={PauseIcon} alt="Pause" />
+          </button>
+        ) : (
+            <button onClick={play}>
+              <img src={PlayIcon} alt="Play" />
+            </button>
+        )}
+        <button onClick={next}>
           <img src={ForwardIcon} alt="ForwardIcon" />
         </button>
         <button>
           <img src={RepeatIcon} alt="RepeatIcon" />
         </button>
-      </Controls>      
+      </Controls>
       <Time>
-        <span>1:40</span>
-          <ProgressSlider>
-            <Slider
-              railStyle={{background: '#404040', borderRadius: 10}}
-              trackStyle={{ background: '#1ED760'}}
-              handleStyle={{border: 0}}
-            />
-          </ProgressSlider>
-        <span>4:20</span>
+        <span>{position}</span>
+        <ProgressSlider>
+          <Slider
+            railStyle={{ background: '#404040', borderRadius: 10 }}
+            trackStyle={{ background: '#1ED760' }}
+            handleStyle={{ border: 0 }}
+          />
+        </ProgressSlider>
+        <span>{duration}</span>
       </Time>
     </Progress>
 
     <Volume>
-      <img src={VolumeIcon} alt="Volume"/>
+      <img src={VolumeIcon} alt="Volume" />
       <Slider
-        railStyle={{background: '#404040', borderRadius: 10}}
-        trackStyle={{background: '#FFF'}}
-        handleStyle={{display: 'none'}}
-        //value={100}
+        railStyle={{ background: '#404040', borderRadius: 10 }}
+        trackStyle={{ background: '#FFF' }}
+        handleStyle={{ display: 'none' }}
+      //value={100}
       />
     </Volume>
 
   </Container>
 );
 
-export default Player;
+Player.propTypes = {
+  player: PropTypes.shape({
+    currentSong: PropTypes.shape({
+      file: PropTypes.string,
+      thumbnail: PropTypes.string,
+      title: PropTypes.string,
+      author: PropTypes.string,
+    }),
+    status: PropTypes.string,
+  }).isRequired,
+  play: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired,
+  next: PropTypes.func.isRequired,
+  prev: PropTypes.func.isRequired,
+  playing: PropTypes.func.isRequired,
+  position: PropTypes.string.isRequired,
+  duration: PropTypes.string.isRequired,
+}
+
+function msToTime(duration){
+  let seconds = parseInt((duration / 1000) % 60, 10);
+  const minutes = parseInt((duration / (1000 * 60) % 60), 10);
+
+  seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+  return `${minutes}:${seconds}`;
+
+}
+
+const mapStateToProps = state => ({
+  player: state.player,
+  position: msToTime(state.player.position),
+  duration: msToTime(state.player.duration),
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(PlayerActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Player);

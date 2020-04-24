@@ -11,6 +11,7 @@ Api
 yarn add redux-saga axios
 
 
+
 Descrição do funcionamento: Ao adicionar repositorio favorito no index Main, é conectado ao redux,
 no index Store é iniciando o redux Saga.
 É passado a action REQUEST que realiza a chamada na api assincrona utilizando o yield, os dados trazidos

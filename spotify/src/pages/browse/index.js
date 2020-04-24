@@ -1,39 +1,61 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+// Redux
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as PlaylistActions } from '../../store/ducks/playlists';
+
+import Loading from '../../components/Loading';
+
+import { Container, Title, List, Playlist } from './styles';
+  
+class Browse extends Component {
+  static propTypes = {
+    getPlaylistRequest: PropTypes.func.isRequired,
+    playlists: PropTypes.shape({
+      data: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+        thumbnail:  PropTypes.string,
+        description:  PropTypes.string,
+      })),
+      loading: PropTypes.bool,
+    }).isRequired,
+  };
+  
+  componentDidMount(){
+    
+  }
+  
+  render() {
+    return (
+      <Container>
+        <Title>
+          Navegar 
+          {this.props.playlists.loading && <Loading/>}
+        </Title>
+
+        <List>
+          {this.props.playlists.data.map(playlist => (            
+            <Playlist key={playlist.id} to={`/playlists/${playlist.id}`}>
+              <img src={playlist.thumbnail} alt={playlist.title} />
+              <strong>{playlist.title}</strong>
+              <p>{playlist.description}</p>
+            </Playlist>
+          ))}
 
 
-import { Container, Title, List, Playlist} from './styles';
+        </List>
+      </Container>
+    );
+  }
+}
 
-const Browse = () => (
-  <Container>
-    <Title>Navegar</Title>
-   
-    <List>
-      <Playlist to="/playlists/1">
-        <img src="https://memorialraulseixas457382085.files.wordpress.com/2018/06/salt.jpg?w=616" alt="Playlist" />
-        <strong>Rock dos bons</strong>
-        <p>Relaxe enquanto você programa ouvindo as melhores do Rock Mundial!</p>
-      </Playlist>
-      
-      <Playlist to="/playlists/1">
-        <img src="https://memorialraulseixas457382085.files.wordpress.com/2018/06/salt.jpg?w=616" alt="Playlist" />
-        <strong>Rock dos bons</strong>
-        <p>Relaxe enquanto você programa ouvindo as melhores do Rock Mundial!</p>
-      </Playlist>
+const mapStateToProps = state => ({
+  playlists: state.playlists,
+});
 
-      <Playlist to="/playlists/1">
-        <img src="https://memorialraulseixas457382085.files.wordpress.com/2018/06/salt.jpg?w=616" alt="Playlist" />
-        <strong>Rock dos bons</strong>
-        <p>Relaxe enquanto você programa ouvindo as melhores do Rock Mundial!</p>
-      </Playlist>
+const mapDispatchToProps = dispatch => bindActionCreators(PlaylistActions, dispatch);
 
-      <Playlist to="/playlists/1">
-        <img src="https://memorialraulseixas457382085.files.wordpress.com/2018/06/salt.jpg?w=616" alt="Playlist" />
-        <strong>Rock dos bons</strong>
-        <p>Relaxe enquanto você programa ouvindo as melhores do Rock Mundial!</p>
-      </Playlist>
-    </List>
-  </Container>
-
-);
-
-export default Browse;
+export default connect(mapStateToProps, mapDispatchToProps)(Browse);

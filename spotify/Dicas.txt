@@ -1,7 +1,25 @@
 Criação: yarn create react-app spotify
+#IMPORTANT - Instalar pacotes do redux antes do reactotron;
 
+ESlint: Instalado mas não configurado
 npm install eslint - D
 npx eslint --init
 
 Estilos: yarn add styled-components
-Slider: yarn add rc-slider
+Slider Components: yarn add rc-slider
+Rotas: yarn add react-router-dom
+
+#IMPORTANT - Instalar pacotes do redux antes do reactotron;
+REDUX: yarn add redux react-redux redux-saga
+yarn add prop-types
+Reactotron: yarn add reactotron-react-js reactotron-redux reactotron-redux-saga
+ Se ainda não funcionar o problema do reactotron-redux-saga, tente: npm install --save-dev reactotron-redux-saga
+
+AXIOS: yarn add axios
+
+JSON SERVER
+Instalação: yarn global add json-server
+Iniciando: json-server server.json -p 3001 -w -d 500
+
+AUDIOS
+yarn add react-sound

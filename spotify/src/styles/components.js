@@ -4,7 +4,6 @@ export const Wrapper = styled.div`
   height: 100%;  
   display: flex;
   flex-direction: column;
-
 `;
 
 export const Container = styled.div`
@@ -20,6 +19,5 @@ export const Content = styled.div`
   background-size: 100% 250px, 100%;
   background-repeat: no-repeat;
   background-position: top;
-
   padding: 0 20px;
 `;
